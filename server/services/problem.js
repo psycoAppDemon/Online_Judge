@@ -1,0 +1,22 @@
+import { problem } from "../models/problem.js";
+
+export const getProblem = async (problemId) => {
+  try {
+    const reqProblem = await problem.findById(problemId);
+    return reqProblem;
+  } catch (error) {
+    throw new Error("Failed to fetch problems");
+  }
+};
+
+export const getProblemTestCaseList = async (problemId) => {
+  try {
+    const reqProblem = await problem.findOne(
+      { _id: problemId },
+      { testcaseList: 1, _id: 0 }
+    );
+    return reqProblem.testcaseList;
+  } catch (error) {
+    throw new Error("Failed to fetch problem test case list");
+  }
+};
