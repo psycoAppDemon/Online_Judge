@@ -14,7 +14,7 @@ export const homeWindow = async (req, res) => {
   try {
     const problems = await problemList(); // Ensure the result is awaited
     const responseData = problems.map(({ _id, problemName }) => ({ _id, problemName }));
-
+    //console.log(responseData);
     return res.status(200).json({ responseData,
       loginStatus
      });

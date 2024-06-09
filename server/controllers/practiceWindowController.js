@@ -2,8 +2,10 @@ import { getProblem } from "../services/problem.js";
 import { getTestCase } from "../services/testcase.js";
 
 export const practiceWindow = async (req,res) =>{
+    console.log("Fetching data in server");
     try {
-        const  problemId  = req.body.problemId;
+        const  problemId  = req.params.problemId;
+        //console.log(problemId);
         let problem = await getProblem(problemId);
         problem = problem.toObject(); // Convert to a regular object
         let testcaseList = [];
@@ -12,13 +14,17 @@ export const practiceWindow = async (req,res) =>{
             testcase = testcase.toObject(); // Convert to a regular object
             delete testcase._id;
             delete testcase.problemId;
+            delete testcase.category;
             testcaseList.push(testcase);
         }
         delete problem.testcaseList;
         return res.status(200).json({ 
-            problem,
+            problemName:problem.problemName,
+            problemStatement: problem.problemStatement,
+            IOformatDescription: problem.IOformatDescription,
+            Constraints: problem.constraints,
             testcaseList
-         });
+         }); 
       } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });

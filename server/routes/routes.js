@@ -13,7 +13,12 @@ const router = express.Router();
 
 router.post("/register", signUpUser);
 router.get("/home", homeWindow);
-router.get("/problemId", practiceWindow);
+// router.get("/home", (req,res) =>{
+//   return res.send({
+//     problem: 
+//   });
+// })
+router.get("/:problemId", practiceWindow);
 router.post("/run",run);
 router.post("/submit", submit);
 router.post("/login", loginUser);
