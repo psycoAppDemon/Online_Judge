@@ -14,8 +14,10 @@ export const practiceWindow = async (req,res) =>{
             testcase = testcase.toObject(); // Convert to a regular object
             delete testcase._id;
             delete testcase.problemId;
-            delete testcase.category;
-            testcaseList.push(testcase);
+            if(testcase.category !== "hidden"){
+                testcaseList.push(testcase);
+            }
+            
         }
         delete problem.testcaseList;
         return res.status(200).json({ 

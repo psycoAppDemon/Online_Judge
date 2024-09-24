@@ -8,6 +8,7 @@ import {
 import { homeWindow } from "../controllers/homeWindowController.js";
 import { practiceWindow } from "../controllers/practiceWindowController.js";
 import { run, submit } from "../controllers/codeExecutionController.js";
+import { addProblem, deleteProblem, updateProblem } from "../controllers/adminController.js";
 
 const router = express.Router();
 
@@ -23,5 +24,8 @@ router.post("/run",run);
 router.post("/submit", submit);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
+router.post("/addProblem",addProblem);
+router.delete("/deleteProblem",deleteProblem);
+router.put("/updateProblem", updateProblem);
 
 export default router;

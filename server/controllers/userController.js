@@ -51,7 +51,10 @@ export const signUpUser = async (req, res) => {
 
     res.status(200).json({
       message: "User Registered Successfully!",
-      userToSend,
+      email,
+      userId,
+      user_id: newUser._id,
+      token: setUser(newUser)
     });
   } catch (error) {
     console.error(error.message);
@@ -64,35 +67,36 @@ export const loginUser = async (req, res) => {
   const reqtoken = req.cookies["token"];
   if (reqtoken) {
     const payload = getUser(reqtoken);
-    if (payload && (payload._id == userId || payload.email == email)) {
+    if (payload) {
+      const getUserById = await User.findById(payload._id);
       return res.status(200).json({
         message: "User verified with token",
+        userId: getUserById.userId,
+        _id: getUserById._id,
+        email: getUserById.email,
+        role: getUserById.role,
       });
     } else {
       res.clearCookie("token");
-      return res.status(400).json({
-        message:
-          "User redirected to Login/Register page after deletion token from cookie",
-      });
     }
   }
 
   if (!(email || userId)) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Please enter username or password!",
     });
   }
 
   const user = await User.findOne({ $or: [{ email }, { userId }] });
   if (!user) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "User doesn't exist!",
     });
   }
 
   const isPasswordMatched = await bcrypt.compareSync(password, user.password);
   if (!isPasswordMatched) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Incorrect Password!",
     });
   }
@@ -103,14 +107,25 @@ export const loginUser = async (req, res) => {
     httponly: true, //so that cookie can be manipulated by backend only
   };
 
-  res.status(200).cookie("token", token, option).json({
+  return res.status(200).cookie("token", token, option).json({
     message: "User logged in successfully!",
     token,
+    userId: user.userId,
+    _id: user._id,
+    email: user.email,
+    role: user.role
   });
 };
 
 export const logoutUser = async (req, res) => {
   changeTokenExpiry(req.cookies["token"]);
+  res.clearCookie("token");
+  return res.status(200).json({
+    message: "logged out successfully",
+  });
+};
+
+export const getUserDetail = async (req, res) => {
   res.clearCookie("token");
   return res.status(200).json({
     message: "logged out successfully",

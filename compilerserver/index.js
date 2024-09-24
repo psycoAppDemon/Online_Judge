@@ -1,7 +1,7 @@
 const http = require('http');
 const { generateInputFile, generateCodeFile } = require('./generateFile.js');
 const { executeCPP, deleteOutputFile } = require('./runCode.js');
-const fs = require("fs");
+const fs = require('fs');
 
 const server = http.createServer(async (req, res) => {
   if (req.method === 'POST' && req.url === '/run') {
@@ -15,9 +15,9 @@ const server = http.createServer(async (req, res) => {
       try {
         const { code, input } = JSON.parse(body);
 
-        if (!code || !input) {
+        if (!code || code.trim() === '' || !input || input.trim() === '') {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ message: 'Code or input is missing' }));
+          res.end(JSON.stringify({ message: 'Code or input is missing or empty' }));
           return;
         }
 
@@ -42,13 +42,14 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'Success', output: output }));
       } catch (error) {
+        console.error('Error:', error.message);
         res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: `Compiler Server Error: ${error.message}`, output:output }));
+        res.end(JSON.stringify({ message: `Compiler Server Error: ${error.message}` }));
       }
     });
   } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end(JSON.stringify({ message: 'Not Found!'}));
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'Not Found!' }));
   }
 });
 

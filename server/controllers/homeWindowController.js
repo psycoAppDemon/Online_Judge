@@ -5,12 +5,11 @@ export const homeWindow = async (req, res) => {
   let loginStatus;
   try{
     const reqtoken = req.cookies["token"];
+    if(reqtoken)
     loginStatus = getUser(reqtoken);
   }catch(error){
     console.error("Error in vrifying token in home window");
   }
-
-
   try {
     const problems = await problemList(); // Ensure the result is awaited
     const responseData = problems.map(({ _id, problemName }) => ({ _id, problemName }));

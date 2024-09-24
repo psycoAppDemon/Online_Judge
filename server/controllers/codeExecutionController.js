@@ -41,6 +41,7 @@ export const submit = async (req, res) => {
         userId: userDetail._id,
         verdict: "pending",
       });
+      console.log(`${newsubmission}`);
       try {
         const submissionlistResult = await User.updateOne(
           { _id: userDetail._id },
@@ -52,9 +53,12 @@ export const submit = async (req, res) => {
       }
 
       for (let i = 0; i < testcaseList.length; i++) {
+        console.log("hii");
         let testcase = await getIO(testcaseList[i]);
         try {
+          
           const response = await execute(code, "cpp", testcase.input);
+          console.log(response);
           if (response.message === "Success") {
             if (response.output !== testcase.output) {
               try {
@@ -69,7 +73,7 @@ export const submit = async (req, res) => {
               return res.json({
                 verdict: "Failed on testcase",
                 input: testcase.input,
-                outpout: response.output,
+                output: response.output,
                 expected: testcase.output,
               });
             }
@@ -87,7 +91,7 @@ export const submit = async (req, res) => {
       } catch (error) {
         console.error("Error updating verdict:", error);
       }
-      res.json({
+      return res.json({
         verdict: "Accepted",
       });
     }else{

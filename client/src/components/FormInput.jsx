@@ -17,15 +17,18 @@ const FormInput = ({
   inputValues,
   placeHolderDummy,
   validateInputs,
+  isSignUp
 }) => {
   const [staticPlaceHolder, setStaticPlaceHolder] = useState("");
   const [staticType, setStaticType] = useState("text");
   const [staticId, setStaticId] = useState("text");
   const [isValid, setIsValid] = useState(true);
+  const [isSignInInput, setIsSignInInput] = useState(false);
   useEffect(() => {
     setStaticPlaceHolder(inputValues[inputState].placeHolder);
     setStaticType(inputValues[inputState].type);
     setStaticId(inputValues[inputState].id);
+    setIsSignInInput(inputValues[inputState].isSignInInput);
   }, [placeHolderDummy]);
 
   const handleChange = (e) => {
@@ -41,7 +44,7 @@ const FormInput = ({
   };
 
   return (
-    <Grid item xs={12} sm={staticId == "password" ? 0 : 6}>
+    <Grid item xs={12} sm={ isSignUp?(staticId == "password" ? 0 : 6): 0} sx={{display: isSignUp?'block':(isSignInInput?'block':'none')}}>
       <TextField
         required
         fullWidth
