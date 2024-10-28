@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.body-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px,1fr));
+  height: 800px;  
+  margin-top: 2px;
+  grid-auto-rows: minmax(100px, auto);
+  grid-auto-columns: minmax(50px,auto);
+}
+
+.body-grid > div {
+  width: 500px;
+  height: 400px;
+  margin: 10px;
+  text-align: center;
+  align-self: center;
+  justify-self: center;
+  font-size: 30px;
+  border-radius: 16px;
+} 
+
+.question-List {
+  background-color: lightblue;
+}
+
+.editor {
+  background-color: lightcoral;
+}
