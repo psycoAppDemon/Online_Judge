@@ -1,6 +1,8 @@
 import { User } from "../models/user.js";
+import { submission } from "../models/submission.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 import { setUser, getUser } from "../services/auth.js";
 
 dotenv.config();
@@ -9,7 +11,7 @@ function changeTokenExpiry(token) {
   try {
     const decoded = jwt.decode(token);
 
-    const newToken = jwt.sign({ ...decoded, exp: "0" }, process.env.JWT_SECRET);
+    const newToken = jwt.sign({ ...decoded, exp: 0 }, process.env.JWT_KEY);
 
     return newToken;
   } catch (error) {
@@ -24,7 +26,7 @@ export const signUpUser = async (req, res) => {
 
     // check whether none of the data was null
     if (!(firstname, lastname, email, password, userId)) {
-      return res.status(404).send("Please enter all the required info");
+      return res.status(400).json({ verdict: "Some inputs are missing" });
     }
 
     //check if the user already exist or not
@@ -33,7 +35,7 @@ export const signUpUser = async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(400).send("User already exist");
+      return res.status(400).json({ verdict: "User Already Exists" });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
@@ -48,72 +50,91 @@ export const signUpUser = async (req, res) => {
 
     const userToSend = newUser.toObject();
     delete userToSend.password;
-
-    res.status(200).json({
-      message: "User Registered Successfully!",
-      email,
-      userId,
-      user_id: newUser._id,
-      token: setUser(newUser)
+    const token = setUser(newUser);
+    if (!token) {
+      throw new Error("Failed to generate authentication token.");
+    }
+    res.cookie("token", token, {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: false,
+      httpOnly: false,
+    });
+    return res.status(200).json({
+      vertict: "User Registered Successfully!",
+      user: { email, userId, user_id: newUser._id },
     });
   } catch (error) {
-    console.error(error.message);
+    console.error(`SignUp Error: ${error.message}`);
+    return res.status(500).json({
+      vertict: "Server error during Sign Up",
+      error: error.message,
+    });
   }
 };
 
 export const loginUser = async (req, res) => {
   console.log("Login");
   const { email, userId, password } = req.body;
-  const reqtoken = req.cookies["token"];
-  if (reqtoken) {
+  const reqtoken = req.cookies.token;
+  if (reqtoken && reqtoken !== "undefined" && reqtoken !== "null") {
+    console.log(reqtoken);
     const payload = getUser(reqtoken);
+    console.log(payload);
     if (payload) {
       const getUserById = await User.findById(payload._id);
       return res.status(200).json({
-        message: "User verified with token",
-        userId: getUserById.userId,
-        _id: getUserById._id,
-        email: getUserById.email,
-        role: getUserById.role,
+        verdict: "User verified with token",
+        user: {
+          email: getUserById.email,
+          userId: getUserById.userId,
+          role: getUserById.role,
+        },
       });
     } else {
-      res.clearCookie("token");
+      return res
+        .status(400)
+        .json({
+          vertict: "Invalid Token",
+        })
+        .clearCookie("token");
     }
   }
 
   if (!(email || userId)) {
     return res.status(400).json({
-      message: "Please enter username or password!",
+      vertict: "Please enter username or password!",
     });
   }
-
+  console.log(email);
   const user = await User.findOne({ $or: [{ email }, { userId }] });
   if (!user) {
     return res.status(400).json({
-      message: "User doesn't exist!",
+      verdict: "User doesn't exist!",
     });
   }
 
   const isPasswordMatched = await bcrypt.compareSync(password, user.password);
   if (!isPasswordMatched) {
     return res.status(400).json({
-      message: "Incorrect Password!",
+      verdict: "Incorrect Password!",
     });
   }
 
   const token = setUser(user);
-  const option = {
-    expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-    httponly: true, //so that cookie can be manipulated by backend only
-  };
+  res.cookie("token", token, {
+    maxAge: 24 * 60 * 60 * 1000,
+    secure: false,
+    httpOnly: false,
+  });
 
-  return res.status(200).cookie("token", token, option).json({
-    message: "User logged in successfully!",
-    token,
-    userId: user.userId,
-    _id: user._id,
-    email: user.email,
-    role: user.role
+  return res.status(200).json({
+    verdict: "User logged in successfully!",
+    user: {
+      userId: user.userId,
+      _id: user._id,
+      email: user.email,
+      role: user.role,
+    },
   });
 };
 
@@ -121,13 +142,38 @@ export const logoutUser = async (req, res) => {
   changeTokenExpiry(req.cookies["token"]);
   res.clearCookie("token");
   return res.status(200).json({
-    message: "logged out successfully",
+    verdict: "Logged out successfully",
   });
 };
 
 export const getUserDetail = async (req, res) => {
   res.clearCookie("token");
   return res.status(200).json({
-    message: "logged out successfully",
+    verdict: "Logged out successfully",
   });
+};
+
+export const getSubmission = async (req, res) => {
+  const reqtoken = req.cookies.token;
+  if (reqtoken && reqtoken !== "undefined" && reqtoken !== "null") {
+    console.log(reqtoken);
+    const payload = getUser(reqtoken);
+    if (payload) {
+      const getUserById = await User.findById(payload._id);
+      
+      const result = await submission.find(
+        { _id: { $in: getUserById.submission } },
+        { problemId: 1, verdict: 1 } // Adjust field names based on your schema
+      );
+      //console.log(JSON.stringify(result));  
+      return res.status(200).json({
+        verdict: "User submissons details fetched successfully!",
+        submission: result,
+      });
+    }
+  } else {
+    res.status(400).json({
+      verdict: "User not logged in!",
+    });
+  }
 };

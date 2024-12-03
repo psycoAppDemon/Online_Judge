@@ -11,12 +11,15 @@ export const getProblem = async (problemId) => {
 
 export const getProblemTestCaseList = async (problemId) => {
   try {
+    console.log(problemId);
     const reqProblem = await problem.findOne(
       { _id: problemId },
       { testcaseList: 1, _id: 0 }
     );
+    console.log(reqProblem);
     return reqProblem.testcaseList;
   } catch (error) {
+    console.log(error);
     throw new Error("Failed to fetch problem test case list");
   }
 };

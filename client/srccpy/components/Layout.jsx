@@ -1,62 +1,48 @@
 import React from "react";
-import Header from "./header";
-import AppAppBar from "./AppAppBar";
+import AppAppBar from "./AppAppBar.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-
+import { useSelector, useDispatch } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import MainContent from "./MainContent";
 // import Footer from './components/Footer';
-import TemplateFrame from "../TemplateFrame";
-import getBlogTheme from "../theme/getBlogTheme";
-import Body from "./Body";
+import TemplateFrame from "../TemplateFrame.jsx";
+import getBlogTheme from "../theme/getBlogTheme.jsx";
 import { Box } from "@mui/material";
-const Layout = () => {
+const Layout = ({ children }) => {
   //   return (
   //     <>
   //         <AppAppBar/>
   //     </>
   //   )
-  const [mode, setMode] = React.useState("light");
+  // const [mode, setMode] = React.useState("light");
+  const { mode } = useSelector((state) => state.color_mode);
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const blogTheme = createTheme(getBlogTheme(mode));
   const defaultTheme = createTheme({ palette: { mode } });
   // This code only runs on the client side, to determine the system color preference
-  React.useEffect(() => {
-    // Check if there is a preferred mode in localStorage
-    const savedMode = localStorage.getItem("themeMode");
-    if (savedMode) {
-      setMode(savedMode);
-    } else {
-      // If no preference is found, it uses system preference
-      const systemPrefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      setMode(systemPrefersDark ? "dark" : "light");
-    }
-  }, []);
-
-  const toggleColorMode = () => {
-    const newMode = mode === "dark" ? "light" : "dark";
-    setMode(newMode);
-    localStorage.setItem("themeMode", newMode); // Save the selected mode to localStorage
-  };
+  // React.useEffect(() => {
+  //   // Check if there is a preferred mode in localStorage
+  //   const savedMode = localStorage.getItem("themeMode");
+  //   if (savedMode) {
+  //     setMode(savedMode);
+  //   } else {
+  //     // If no preference is found, it uses system preference
+  //     const systemPrefersDark = window.matchMedia(
+  //       "(prefers-color-scheme: dark)"
+  //     ).matches;
+  //     setMode(systemPrefersDark ? "dark" : "light");
+  //   }
+  // }, []);
 
   const toggleCustomTheme = () => {
     setShowCustomTheme((prev) => !prev);
   };
   return (
-    <Box >
-      <TemplateFrame
-        toggleCustomTheme={toggleCustomTheme}
-        showCustomTheme={showCustomTheme}
-        mode={mode}
-        toggleColorMode={toggleColorMode}
-      >
+    <Box>
+      <TemplateFrame>
         <ThemeProvider theme={showCustomTheme ? blogTheme : defaultTheme}>
           <CssBaseline enableColorScheme />
           <AppAppBar />
-            <Body />
+          <Box sx={{display: "flex", justifyContent:"center", alignContent: "center", alignSelf:"center", flex:"1", marginLeft: 6, marginRight:8, marginTop:2}}>{children}</Box>
         </ThemeProvider>
       </TemplateFrame>
     </Box>

@@ -21,7 +21,7 @@ const dirOutput = path.join(__dirname, "output"); // __dirname gives the path to
 // }
 
 const generateCodeFile = async (language, code) => {
-  const submissionId = `code_${Date.now()}.${language}`;
+  const submissionId = `code_${Date.now()}`;
   const fileName = `${submissionId}.${language}`;
   const filePath = path.join(dirCodes, fileName);
   await fs.promises.writeFile(filePath, code); // use fs.promises.writeFile for async operation

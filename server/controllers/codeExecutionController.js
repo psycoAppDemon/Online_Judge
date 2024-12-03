@@ -6,20 +6,29 @@ import { submission } from "../models/submission.js";
 import path from "path";
 import { getUser } from "../services/auth.js";
 import { User } from "../models/user.js";
+import { response } from "express";
+import { error } from "console";
 
 export const run = async (req, res) => {
   const { language = "cpp", code, input } = req.body; // default language is cpp
-
+  console.log("hello");
   if (!code) {
     return res.status(400).json({
       message: "Code is empty",
     });
   }
   try {
-    const response = await execute(code, language , input);
-    res.json(response);
+    const response = await execute(code, language, input);
+    console.log(response);
+    if (response.message === undefined) {
+      return res.status(500).json(response);
+    }
+    if (response.message === "Success") {
+      return res.status(200).json(response);
+    }
+    return res.status(400).json(response);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error });
   }
 };
 
@@ -31,6 +40,10 @@ export const submit = async (req, res) => {
       const problemId = req.body.problemId;
       const code = req.body.code;
       const language = req.body.language;
+      if (problemId === undefined || problemId === null)
+        return res.status(400).json({
+          error: "Missing problem ID",
+        });
       const testcaseList = await getProblemTestCaseList(problemId);
       const codeFilePath = await generateCodeFile(language, code);
       const newsubmission = await submission.create({
@@ -53,10 +66,8 @@ export const submit = async (req, res) => {
       }
 
       for (let i = 0; i < testcaseList.length; i++) {
-        console.log("hii");
         let testcase = await getIO(testcaseList[i]);
         try {
-          
           const response = await execute(code, "cpp", testcase.input);
           console.log(response);
           if (response.message === "Success") {
@@ -66,38 +77,49 @@ export const submit = async (req, res) => {
                   { _id: newsubmission._id },
                   { $set: { verdict: "Wrong Answer" } }
                 );
-                console.log("Update verdict:", result);
+                //console.log("Update verdict:", result);
               } catch (error) {
                 console.error("Error updating verdict:", error);
               }
-              return res.json({
-                verdict: "Failed on testcase",
-                input: testcase.input,
-                output: response.output,
-                expected: testcase.output,
+              return res.status(400).json({
+                  message: "Wrong Answer",
+                  input: testcase.input,
+                  output: response.output,
+                  expected: testcase.output,
               });
             }
+          } else {
+            try {
+              const result = await submission.updateOne(
+                { _id: newsubmission._id },
+                { $set: { verdict: response.message } }
+              );
+              console.log("Update verdict:", result);
+            } catch (error) {
+              console.error("Error updating verdict:", error);
+            }
+            return res.status(400).send(response);
           }
         } catch (error) {
-          res.status(500).json({ error: error.message });
+          res.status(500).send({ error: error.message });
         }
       }
       try {
         const result = await submission.updateOne(
           { _id: newsubmission._id },
-          { $set: { verdict: "Accepted" } }
+          { $set: { verdict: response.message } }
         );
         console.log("Update verdict:", result);
       } catch (error) {
         console.error("Error updating verdict:", error);
       }
-      return res.json({
-        verdict: "Accepted",
+      return res.status(200).json({
+        message: "Accepted",
       });
-    }else{
-        res.status(300).json({
-            message: "User not logged in"
-        });
+    } else {
+      res.status(300).json({
+        message: "User not logged in",
+      });
     }
   } catch (error) {
     console.error(error);

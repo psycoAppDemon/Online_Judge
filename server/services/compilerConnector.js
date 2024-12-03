@@ -6,9 +6,10 @@ export const execute = async (code, language, input) => {
       code: code,
       input: input,
     });
-    console.log(response.message);
+    //console.log(`In Execution: ${JSON.stringify(response.data)}`);
     return response.data;
   }catch(error){
-    console.log(error.message);
+    //console.log(`In Execution Error: ${error}`);
+    return (`Error in code execution: ${error}`);
   }  
 };
