@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const execute = async (code, language, input) => {
   try {
-    const response = await axios.post("http://localhost:2020/run", {
+    const response = await axios.post(process.env.COMPILER_URL, {
       code: code,
       input: input,
     });

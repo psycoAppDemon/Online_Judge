@@ -5,12 +5,9 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import WebsiteLogo from "./WebsiteLogo";
 import { Typography } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -61,7 +58,7 @@ export default function AppAppBar() {
         mt: 2,
       }}
     >
-      <Container maxWidth="lg">
+      <Box sx={{mx:8}}>
         <StyledToolbar variant="dense" disableGutters>
           <Box
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
@@ -185,7 +182,7 @@ export default function AppAppBar() {
             </Drawer>
           </Box>
         </StyledToolbar>
-      </Container>
+      </Box>
     </AppBar>
   );
 }
