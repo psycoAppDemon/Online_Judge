@@ -11,13 +11,13 @@ if (!fs.existsSync(dirOutput)) {
 const executeCPP = async (codeFilePath, inputFilePath) => {
   console.log("Executing code");
   const submissionId = path.basename(codeFilePath).split(".")[0];
-  const outputFileNme = `${submissionId}.exe`;
+  const outputFileNme = `${submissionId}.out`;
   const outPath = path.join(dirOutput, outputFileNme); // Use .exe for Windows
   //console.log(outPath, codeFilePath, inputFilePath);
   return new Promise((resolve, reject) => {
     exec(
       //`g++ ${codeFilePath} -o ${outPath} && cd ${outPath} && ..\\${inputFilePath}`, // Adjusted command for Windows
-      `g++ ${codeFilePath} -o ${outPath} && cd ${dirOutput} && .\\${outputFileNme} < ${inputFilePath}`,
+      `g++ ${codeFilePath} -o ${outPath} && cd ${dirOutput} && ./${outputFileNme} < ${inputFilePath}`,
       (err, stdout, stderr) => {
         if (err) {
           console.error("Execution Error:", err);
