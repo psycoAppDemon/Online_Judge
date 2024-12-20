@@ -1,14 +1,14 @@
 // src/thunks/authThunks.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const apiurl = import.meta.env.VITE_API_BASE_URL;
 
 export const problemListThunk = createAsyncThunk(
   "problem/problemList",
   async (_, { rejectWithValue }) => {
     // No need for destructured params here
     try {
-      const response = await axios.get(`${API_BASE_URL}/home`, {
+      const response = await axios.get(`${apiurl}/home`, {
         withCredentials: true,
       });
       return response.data; // Returning the fetched data
