@@ -58,11 +58,12 @@ const SubmissionResult = ({ setshowOutput }) => {
       {!runCodeLoading && (
         <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-wrap",
           wordBreak: "break-word", maxHeight:"10vh", overflowY:"auto"}}>
-          {"iuuuuuuoppppqwoiueqwieoqiwoueoquiwoeiqowieuouiwqoeiqwuoeuiwoqiweoqewrpoeiproweiporpwieopioooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooouwoeqoweeruiowieuriowieroweuiroweuroiweuoriueriwueoqwoeiwqe"}
+          {runCodeOutput}
         </Typography>
       )}
       {!submitCodeLoading && (
-        <Typography variant="body1" sx={{ textAlign: "left" }}>
+        <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-wrap",
+          wordBreak: "break-word", maxHeight:"10vh", overflowY:"auto"}}>
           {submitCodeOutput}
         </Typography>
       )}

@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { loginThunk, signupThunk } from "../../store/thunks/authThunks.js";
 import CircularProgress from "@mui/material/CircularProgress";
 import AuthResult from "./AuthResult.jsx";
-import { resetIsAlreadyLoggedIn } from "../../store/slices/authSlice.js";
+import { resetIsAlreadyLoggedIn, resetIsAuthButtonClicked } from "../../store/slices/authSlice.js";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -67,6 +67,7 @@ const SignIn = () => {
         const response = await dispatch(
           loginThunk({ email: data.email.value, password: data.password.value })
         ).unwrap();
+        dispatch(resetIsAuthButtonClicked());
         console.log("Sign In successful:", response);
         navigate("/");
       } catch (error) {
@@ -89,6 +90,7 @@ const SignIn = () => {
           })
         ).unwrap();
         console.log("SignUp successful:", response);
+        dispatch(resetIsAuthButtonClicked());
         navigate("/");
         //handleSignInButtonClicked();
       } catch (error) {

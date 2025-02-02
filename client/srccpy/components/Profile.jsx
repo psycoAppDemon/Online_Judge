@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Card, Typography, Divider, Button } from "@mui/material";
 import Layout from "./Layout";
 import { signoutThunk } from "../store/thunks/authThunks";
-import { resetSubmissionHistory } from "../store/slices/authSlice";
+import { resetSubmissionHistory, resetIsAuthButtonClicked } from "../store/slices/authSlice";
 
 const Profile = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
@@ -15,6 +15,7 @@ const Profile = () => {
       const response = await dispatch(signoutThunk({})).unwrap();
       console.log(response);
       dispatch(resetSubmissionHistory());
+      dispatch(resetIsAuthButtonClicked());
       navigate("/login");
     } catch (error) {
       console.log(`Error while logging out: ${JSON.stringify(error)}`);

@@ -13,7 +13,8 @@ const initialState = {
   responseStatus: null,
   user: null, // Object for user details (ID, email, role, etc.)
   submissionHistory: null,
-  isAutoLoginTried: false
+  isAutoLoginTried: false,
+  isAuthButtonClicked: false
 };
 
 const authSlice = createSlice({
@@ -31,6 +32,9 @@ const authSlice = createSlice({
     },
     resetSubmissionHistory: (state) =>{
       state.submissionHistory = null;
+    },
+    resetIsAuthButtonClicked: (state) =>{
+      state.isAuthButtonClicked= !state.isAuthButtonClicked;
     }
   },
   extraReducers: (builder) => {
@@ -125,5 +129,5 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { resetAuthResponseStatus, resetIsAlreadyLoggedIn, resetIsAutoLoginTried, resetSubmissionHistory } =
+export const { resetAuthResponseStatus, resetIsAlreadyLoggedIn, resetIsAutoLoginTried, resetSubmissionHistory, resetIsAuthButtonClicked } =
   authSlice.actions;

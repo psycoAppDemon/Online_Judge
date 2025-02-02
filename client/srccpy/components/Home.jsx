@@ -52,10 +52,6 @@ const Home = () => {
     console.log(`1. Auth: ${isAuthenticated}`);
     if (!isAutoLoginTried) {
       dispatch(loginThunk({ email: "", password: "" }))
-        .then(() => {
-          // Dispatch secondThunk only after firstThunk is resolved
-          dispatch(submissionHistoryThunk());
-        })
         .catch((error) => {
           console.error("Error dispatching thunks:", error);
         });
@@ -63,6 +59,10 @@ const Home = () => {
     }
     if (!problemList) dispatch(problemListThunk());
   }, [dispatch]);
+
+  useEffect(()=>{
+    dispatch(submissionHistoryThunk());
+  },[isAuthenticated]);
 
   const handleOpenProblem = (problemId) => {
     setIsProblemListWindow(false);
