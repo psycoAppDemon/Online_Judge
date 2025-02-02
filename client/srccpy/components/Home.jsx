@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { submitCodeThunk } from "../store/thunks/submitCodeThunk.js";
 import { resetRunCodeStates } from "../store/slices/runCodeSlice";
 import { resetSubmitCodeStates } from "../store/slices/submitCodeSlice";
+import { resetIsAutoLoginTried } from "../store/slices/authSlice.js";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const Home = () => {
   // Access loading and problemList states from Redux
   const { problemLoading, problemList } = useSelector((state) => state.problem);
   const { currentProblemId } = useSelector((state) => state.currentProblem);
-  const { isAuthenticated, submissionHistory } = useSelector(
+  const { isAuthenticated, submissionHistory, isAutoLoginTried } = useSelector(
     (state) => state.auth
   );
   const { submitCodeLoading } = useSelector((state) => state.submitCode);
@@ -48,24 +49,17 @@ const Home = () => {
 
   // Fetch problem list when component mounts
   useEffect(() => {
-    if (!isAuthenticated) {
-      const cookieName = "token";
-      const cookies = document.cookie.split("; ");
-      const foundCookie = cookies.find((cookie) =>
-        cookie.startsWith(cookieName + "=")
-      );
-
-      if (foundCookie) {
-        console.log(cookieName);
-        dispatch(loginThunk({ email: "", password: "" }))
-          .then(() => {
-            // Dispatch secondThunk only after firstThunk is resolved
-            dispatch(submissionHistoryThunk());
-          })
-          .catch((error) => {
-            console.error("Error dispatching thunks:", error);
-          });
-      }
+    console.log(`1. Auth: ${isAuthenticated}`);
+    if (!isAutoLoginTried) {
+      dispatch(loginThunk({ email: "", password: "" }))
+        .then(() => {
+          // Dispatch secondThunk only after firstThunk is resolved
+          dispatch(submissionHistoryThunk());
+        })
+        .catch((error) => {
+          console.error("Error dispatching thunks:", error);
+        });
+      dispatch(resetIsAutoLoginTried()); 
     }
     if (!problemList) dispatch(problemListThunk());
   }, [dispatch]);

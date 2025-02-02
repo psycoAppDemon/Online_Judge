@@ -56,8 +56,9 @@ const SubmissionResult = ({ setshowOutput }) => {
         {submitCodeLoading ? "Submitting Solution..." : submitCodeResponse}
       </Typography>
       {!runCodeLoading && (
-        <Typography variant="body1" sx={{ textAlign: "left" }}>
-          {runCodeOutput}
+        <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-wrap",
+          wordBreak: "break-word", maxHeight:"10vh", overflowY:"auto"}}>
+          {"iuuuuuuoppppqwoiueqwieoqiwoueoquiwoeiqowieuouiwqoeiqwuoeuiwoqiweoqewrpoeiproweiporpwieopioooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooouwoeqoweeruiowieuriowieroweuiroweuroiweuoriueriwueoqwoeiwqe"}
         </Typography>
       )}
       {!submitCodeLoading && (

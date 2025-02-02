@@ -37,7 +37,7 @@ export default function AppAppBar() {
   };
 
   const handleHomeButtonClicked = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   const handleLogInButtonClicked = () => {
@@ -58,33 +58,27 @@ export default function AppAppBar() {
         mt: 2,
       }}
     >
-      <Box sx={{mx:8}}>
+      <Box sx={{ mx: 8 }}>
         <StyledToolbar variant="dense" disableGutters>
           <Box
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
           >
             <WebsiteLogo></WebsiteLogo>
-            {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small">
-                Features
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Testimonials
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Highlights
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                FAQ
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                Blog
-              </Button>
-            </Box> */}
-            <Typography color="secondary" variant="h3" sx={{ marginLeft: 2 }}>
+
+            <Typography
+              color="black"
+              variant="h3"
+              sx={{
+                marginLeft: { xs: 1, sm: 2, md: 3 }, // Adjusts margin based on screen size
+                fontSize: {
+                  xs: "1.5rem",
+                  sm: "2rem",
+                  md: "2.5rem",
+                  lg: "3rem",
+                }, // Responsive font sizes
+                fontWeight: 600, // Makes it visually strong
+              }}
+            >
               Codebutants
             </Typography>
           </Box>

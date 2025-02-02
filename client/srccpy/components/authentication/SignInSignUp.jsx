@@ -89,7 +89,7 @@ const SignIn = () => {
           })
         ).unwrap();
         console.log("SignUp successful:", response);
-        navigate("/home");
+        navigate("/");
         //handleSignInButtonClicked();
       } catch (error) {
         //console.error("SignUp failed:", error.message);
@@ -230,7 +230,6 @@ const SignIn = () => {
           )}
           {!loading && (
             <Box
-              component="form"
               onSubmit={handleSubmit}
               noValidate
               sx={{
