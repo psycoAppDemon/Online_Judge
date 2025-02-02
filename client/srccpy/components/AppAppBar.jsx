@@ -32,6 +32,7 @@ export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const mode = useSelector((state) => state.color_mode.mode); 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -66,7 +67,7 @@ export default function AppAppBar() {
             <WebsiteLogo></WebsiteLogo>
 
             <Typography
-              color="black"
+              color={mode=="dark"?"white":"black"}
               variant="h3"
               sx={{
                 marginLeft: { xs: 1, sm: 2, md: 3 }, // Adjusts margin based on screen size
