@@ -58,7 +58,7 @@ export default function AppAppBar() {
         mt: 2,
       }}
     >
-      <Box sx={{ mx: 8 }}>
+      <Box sx={{ mx: {xs:"2px", sm:8} }}>
         <StyledToolbar variant="dense" disableGutters>
           <Box
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
@@ -79,7 +79,7 @@ export default function AppAppBar() {
                 fontWeight: 600, // Makes it visually strong
               }}
             >
-              Codebutants
+              CodeDebutants
             </Typography>
           </Box>
           <Box sx={{ marginRight: 2 }}>
