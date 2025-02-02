@@ -68,7 +68,7 @@ const SignIn = () => {
           loginThunk({ email: data.email.value, password: data.password.value })
         ).unwrap();
         console.log("Sign In successful:", response);
-        navigate("/home");
+        navigate("/");
       } catch (error) {
       //console.log("Sign In failed:", error);
       }
