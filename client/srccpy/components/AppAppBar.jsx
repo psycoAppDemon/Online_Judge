@@ -19,7 +19,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   flexShrink: 0,
-  borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
+  borderRadius: {xs:0,sm:`calc(${theme.shape.borderRadius}px + 8px)`},
   backdropFilter: "blur(24px)",
   border: "1px solid",
   borderColor: theme.palette.divider,
@@ -59,7 +59,7 @@ export default function AppAppBar() {
         mt: {xs:0, sm:2},
       }}
     >
-      <Box sx={{ mx: {xs:"2px", sm:8} }}>
+      <Box sx={{ mx: {xs:"0px", sm:8} }}>
         <StyledToolbar variant="dense" disableGutters>
           <Box
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}

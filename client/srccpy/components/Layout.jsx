@@ -42,7 +42,7 @@ const Layout = ({ children }) => {
         <ThemeProvider theme={showCustomTheme ? blogTheme : defaultTheme}>
           <CssBaseline enableColorScheme />
           <AppAppBar />
-          <Box sx={{display: "flex", justifyContent:"center", alignContent: "center", alignSelf:"center", flex:"1", marginLeft: 6, marginRight:8, marginTop:2}}>{children}</Box>
+          <Box sx={{display: "flex", justifyContent:"center", alignContent: "center", alignSelf:"center", flex:"1", marginLeft: {xs:1, sm:6}, marginRight:{xs:1, sm:8}, marginTop:{xs:0,sm:2}}} >{children}</Box>
         </ThemeProvider>
       </TemplateFrame>
     </Box>
