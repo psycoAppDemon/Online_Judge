@@ -83,6 +83,7 @@ const Home = () => {
     dispatch(resetSubmitCodeStates());
     dispatch(resetRunCodeStates());
     dispatch(submitCodeThunk({ code, language, currentProblemId }));
+    dispatch(submissionHistoryThunk());
     setshowOutput(true);
   };
 
