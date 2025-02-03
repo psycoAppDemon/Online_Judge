@@ -81,9 +81,9 @@ const Home = () => {
   const handleSubmitButtonClicked = async () => {
     if (!isAuthenticated) navigate("/login");
     dispatch(resetSubmitCodeStates())
-    .then(()=>dispatch(resetRunCodeStates()))
-    .then(()=>dispatch(submitCodeThunk({ code, language, currentProblemId })))
-    .then(()=>dispatch(submissionHistoryThunk()));
+    dispatch(resetRunCodeStates());
+    dispatch(submitCodeThunk({ code, language, currentProblemId }));
+    dispatch(submissionHistoryThunk());
     setshowOutput(true);
   };
 
